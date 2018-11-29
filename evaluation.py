@@ -13,8 +13,25 @@ from sklearn.model_selection import train_test_split, cross_val_predict
 from sklearn.linear_model import LinearRegression
 from sklearn import metrics
 
-
 import matplotlib.pyplot as plt
+
+
+def predict(X_test, a, y_test, title):
+    # prediction
+    y_prediction = dot(X_test, a)
+
+    # visualisation
+    figure, ax = plt.subplots()
+    ax.scatter(y_test, y_prediction)
+    ax.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=4)
+    ax.set_xlabel('measured')
+    ax.set_ylabel('predicted')
+    ax.set_title(title)
+    plt.show()
+
+    # MSE
+    MSE = metrics.mean_squared_error(y_test, y_prediction)
+    return MSE
 
 
 def least_square():
@@ -39,12 +56,20 @@ def least_square():
     a = dot(dot(inv(dot(X_train.T, X_train)), X_train.T), y_train)
 
     # prediction
-    y_prediction = dot(a.T, X_test.T)
+    MSE_least_square = predict(X_test, a, y_test, 'least square without sklearn')
+    print('MSE when least square: ', MSE_least_square)
 
-    # MSE
-    error = y_prediction.T - y_test
-    MSE = np.sum(pow(error, 2)) / 2392
-    print('MSE when no sklearn: ', MSE)
+    # gradient descent
+    a_gradient = np.array([1., 1., 1., 1., 1.]).reshape(5, 1)
+    alpha = 0.00000000025
+    epochs = 100000
+    for i in range(epochs):
+        error = dot(X_train, a_gradient) - y_train
+        error_each_item = dot(X_train.T, error)
+        a_gradient = a_gradient - alpha * error_each_item
+    # prediction
+    MSE_gradient = predict(X_test, a_gradient, y_test, 'gradient descent')
+    print('MSE when gradient descent: ', MSE_gradient)
 
 
 def sklearn_way():
@@ -71,6 +96,7 @@ def sklearn_way():
     ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
     ax.set_xlabel('measured')
     ax.set_ylabel('predicted')
+    ax.set_title('least square with sklearn')
     plt.show()
 
     # MSE
