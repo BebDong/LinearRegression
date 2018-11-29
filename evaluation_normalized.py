@@ -63,8 +63,8 @@ def least_square():
 
     # gradient descent
     a_gradient = np.array([1., 1., 1., 1., 1.]).reshape(5, 1)
-    alpha = 0.000001
-    epochs = 100000
+    alpha = 0.000002
+    epochs = 2500
     for i in range(epochs):
         error = dot(X_train, a_gradient) - y_train
         error_each_item = dot(X_train.T, error)
