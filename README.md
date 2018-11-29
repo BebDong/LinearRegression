@@ -8,6 +8,8 @@ dataset download：http://archive.ics.uci.edu/ml/machine-learning-databases/0029
 
 #### algorithm
 
-linear_regression.py: least square method without sklearn
+linear_regression.py: least square method without sklearn, and gradient descent
 
 Scikit_pandas:  with sklearn and pandas
+
+evaluation.py: evaluations and visualisation of methods above
