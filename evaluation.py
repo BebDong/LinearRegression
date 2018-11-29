@@ -15,6 +15,8 @@ from sklearn import metrics
 
 import matplotlib.pyplot as plt
 
+import time
+
 
 def visualMSE(y_test, y_prediction, title):
 
@@ -92,12 +94,19 @@ def sklearn_way():
 
     # 10 cross validation
     prediction = cross_val_predict(linearRegression, X, y, cv=10)
-    print('MSE when cross validation: ', metrics.mean_squared_error(y, prediction))
+    MSE_cross_vali = visualMSE(y, prediction, 'MSE when cross validation')
+    print('MSE when cross validation: ', MSE_cross_vali)
 
 
 def main():
+    # begin
+    start = time.perf_counter()
+    # linear regression
     least_square()
     sklearn_way()
+    # end
+    end = time.perf_counter()
+    print("time cost: ", end - start)
 
 
 if __name__ == '__main__':
