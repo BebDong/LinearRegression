@@ -28,10 +28,23 @@ X_test = np.c_[X_test, np.ones((2392, 1))]
 # least square method: w = ((X'X)^-1)X'y
 a = dot(dot(inv(dot(X_train.T, X_train)), X_train.T), y_train)
 
+# gradient descent
+a_gradient = np.array([1., 1., 1., 1., 1.]).reshape(5, 1)
+alpha = 0.00000000025
+epochs = 100000
+for i in range(epochs):
+    error = dot(X_train, a_gradient) - y_train
+    error_each_item = dot(X_train.T, error)
+    a_gradient = a_gradient - alpha * error_each_item
+
 # prediction
-y_prediction = dot(a.T, X_test.T)
+y_prediction = dot(X_test, a)
+y_prediction_gradient = dot(X_test, a_gradient)
 
 # mean squared error(MSE) to evaluate
-error = y_prediction.T - y_test
+error = y_prediction - y_test
+error_gradient = y_prediction_gradient - y_test
 MSE = np.sum(pow(error, 2)) / 2392
-print('MSE: ', MSE)
+MSE_gradient = np.sum(pow(error_gradient, 2)) / 2392
+print('MSE with least square: ', MSE)
+print('MSE with gradient descent: ', MSE_gradient)
