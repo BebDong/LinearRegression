@@ -16,9 +16,7 @@ from sklearn import metrics
 import matplotlib.pyplot as plt
 
 
-def predict(X_test, a, y_test, title):
-    # prediction
-    y_prediction = dot(X_test, a)
+def visualMSE(y_test, y_prediction, title):
 
     # visualisation
     figure, ax = plt.subplots()
@@ -54,9 +52,9 @@ def least_square():
 
     # least square method: w = ((X'X)^-1)X'y
     a = dot(dot(inv(dot(X_train.T, X_train)), X_train.T), y_train)
-
     # prediction
-    MSE_least_square = predict(X_test, a, y_test, 'least square without sklearn')
+    y_prediction = dot(X_test, a)
+    MSE_least_square = visualMSE(y_test, y_prediction, 'least square without sklearn')
     print('MSE when least square: ', MSE_least_square)
 
     # gradient descent
@@ -68,7 +66,8 @@ def least_square():
         error_each_item = dot(X_train.T, error)
         a_gradient = a_gradient - alpha * error_each_item
     # prediction
-    MSE_gradient = predict(X_test, a_gradient, y_test, 'gradient descent')
+    y_prediction = dot(X_test, a_gradient)
+    MSE_gradient = visualMSE(y_test, y_prediction, 'gradient descent')
     print('MSE when gradient descent: ', MSE_gradient)
 
 
@@ -82,25 +81,13 @@ def sklearn_way():
 
     # split the dataset into training set and testing set
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
-
     # use scikit-learn to do linear regression
     linearRegression = LinearRegression()
     linearRegression.fit(X_train, y_train)
-
     # testing set regression
     y_prediction = linearRegression.predict(X_test)
-
-    # visualisation
-    figure, ax = plt.subplots()
-    ax.scatter(y_test, y_prediction)
-    ax.plot([y.min(), y.max()], [y.min(), y.max()], 'k--', lw=4)
-    ax.set_xlabel('measured')
-    ax.set_ylabel('predicted')
-    ax.set_title('least square with sklearn')
-    plt.show()
-
     # MSE
-    MSE = metrics.mean_squared_error(y_test, y_prediction)
+    MSE = visualMSE(y_test, y_prediction, 'least square with sklearn')
     print('MSE when sklearn: ', MSE)
 
     # 10 cross validation
